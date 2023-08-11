@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ProductMigration": {
+      "commandName": "Project",
+      "commandLineArgs": "\"../../../resources/wix-products.csv\" \"../../../output/shopify-products.csv\""
+    }
+  }
+}
