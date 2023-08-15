@@ -1,33 +1,70 @@
-﻿using ProductMigration.models;
+﻿using ProductMigration.dtos;
+using ProductMigration.models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ProductMigration.extensions
 {
-    internal static class WixProductExtension
+    public static class WixProductExtension
     {
-        internal static string GetBody(this WixProduct wixProduct)
+
+        //public static Dictionary<string, string[]> GetOptions(this WixProduct wixProduct)
+        //{
+        //    var options = new Dictionary<string, string[]>();
+        //    PropertyInfo[] properties = wixProduct.GetType().GetProperties();
+        //    foreach (var productOptionProperty in properties.Where(p => p.Name.StartsWith("ProductOptionName")))
+        //    {
+        //        var optionName = (string?)productOptionProperty.GetValue(wixProduct);
+        //        if (optionName == null)
+        //            break;
+
+        //        if (IsValidOption(optionName))
+        //        {
+        //            optionName = OptionNameMigration(optionName);
+        //            var productOptionValueProperty = properties.FirstOrDefault(p => p.Name == "ProductOptionDescription" + productOptionProperty.Name.Replace("ProductOptionName", ""));
+        //            var optionValues = (productOptionValueProperty?.GetValue(wixProduct) as string)?.Split(';');
+        //            options.Add(optionName, optionValues ?? new string[1] );                
+        //        }
+        //    }
+        //    return options;
+        //}
+
+        
+        //public static string GetVariantSKUByOptions(IEnumerable<WixProductDto> wixProductDtos)
+        //{
+        //    foreach (var wixProductDto in wixProductDtos)
+        //    {
+        //        PropertyInfo[] properties = wixProduct.GetType().GetProperties();
+        //        foreach (var productOptionProperty in properties.Where(p => p.Name.StartsWith("ProductOptionName")))
+        //        {
+        //            var optionName = (string?)productOptionProperty.GetValue(wixProduct);
+        //            if (optionName == null)
+        //                break;
+
+        //            if (IsValidOption(optionName))
+        //            {
+        //                optionName = OptionNameMigration(optionName);
+        //                var productOptionValueProperty = properties.FirstOrDefault(p => p.Name == "ProductOptionDescription" + productOptionProperty.Name.Replace("ProductOptionName", ""));
+        //                var optionValues = (productOptionValueProperty?.GetValue(wixProduct) as string)?.Split(';');
+        //                options.Add(optionName, optionValues ?? new string[1]);
+        //            }
+        //        }
+        //    }
+        //    return wixProducts.First(p => options.Any).Select(p => p.Sku)
+        //}
+
+        public static string GetBody(this WixProductDto wixProductDto)
         {
-            return wixProduct.Description
-                    + wixProduct.AdditionalInfoTitle1 != null ? CombineAdditionInformation(wixProduct.AdditionalInfoTitle1, wixProduct.AdditionalInfoDescription1) : ""
-                    + wixProduct.AdditionalInfoTitle2 != null ? CombineAdditionInformation(wixProduct.AdditionalInfoTitle2, wixProduct.AdditionalInfoDescription2) : ""
-                    + wixProduct.AdditionalInfoTitle3 != null ? CombineAdditionInformation(wixProduct.AdditionalInfoTitle3, wixProduct.AdditionalInfoDescription3) : ""
-                    + wixProduct.AdditionalInfoTitle4 != null ? CombineAdditionInformation(wixProduct.AdditionalInfoTitle4, wixProduct.AdditionalInfoDescription4) : ""
-                    + wixProduct.AdditionalInfoTitle5 != null ? CombineAdditionInformation(wixProduct.AdditionalInfoTitle5, wixProduct.AdditionalInfoDescription5) : ""
-                    + wixProduct.AdditionalInfoTitle6 != null ? CombineAdditionInformation(wixProduct.AdditionalInfoTitle6, wixProduct.AdditionalInfoDescription6) : "";
+            return wixProductDto.Description
+                    + string.Join(" ", wixProductDto?.AdditionInfos?.Select(i => CombineAdditionInformation(i.Key, i.Value)) ?? new string[1]);
         }
-        internal static string GetTags(this WixProduct wixProduct)
+        public static string GetTags(this WixProductDto wixProductDto)
         {
-            return wixProduct.Description
-                    + wixProduct.AdditionalInfoTitle1 != null ? CombineAdditionInformation(wixProduct.AdditionalInfoTitle1, wixProduct.AdditionalInfoDescription1) : ""
-                    + wixProduct.AdditionalInfoTitle2 != null ? CombineAdditionInformation(wixProduct.AdditionalInfoTitle2, wixProduct.AdditionalInfoDescription2) : ""
-                    + wixProduct.AdditionalInfoTitle3 != null ? CombineAdditionInformation(wixProduct.AdditionalInfoTitle3, wixProduct.AdditionalInfoDescription3) : ""
-                    + wixProduct.AdditionalInfoTitle4 != null ? CombineAdditionInformation(wixProduct.AdditionalInfoTitle4, wixProduct.AdditionalInfoDescription4) : ""
-                    + wixProduct.AdditionalInfoTitle5 != null ? CombineAdditionInformation(wixProduct.AdditionalInfoTitle5, wixProduct.AdditionalInfoDescription5) : ""
-                    + wixProduct.AdditionalInfoTitle6 != null ? CombineAdditionInformation(wixProduct.AdditionalInfoTitle6, wixProduct.AdditionalInfoDescription6) : "";
+            return wixProductDto.Description;
         }
 
         private static string CombineAdditionInformation(string? title, string? description)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProductMigration.models
 {
-    internal enum WixProductType
+    public enum WixProductType
     {
         AdjustableRearsets,
         FrontBrakeRotors,
@@ -24,7 +24,7 @@ namespace ProductMigration.models
     }
 
 
-    internal class WixProduct
+    public class WixProduct
     {
         [Name("handleId")]
         public string HandleId { get; set; } 
